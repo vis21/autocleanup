@@ -1,49 +1,49 @@
 #!/bin/bash
-# Simple script to remove any files older than 30 days and record their names in a log file
-# and if no files can be found then log an error
 # Author: vis21
-# Version: 1.0
+# Version: 1.1
 
 # Colours to use for log file entries
-RED="\e[31m"
-GREEN="\e[32m"
+red="\e[31m"
+green="\e[32m"
 
 # Directory to search in
-export MAINDIR=/data/example/
+mainDir=/data/example/
 
 # Directory for the log files
-export LOGDIR=/data/autocleanup-logs/
+logDir=/data/autocleanup-logs/
 
 # Format of the log file
-export LOGFILE="$(date +%Y-%m-%d)_log.txt"
+logFile="$(date +%Y-%m-%d)_log.txt"
 
-# Check if the MAINDIR exists and if not return error
-if [ ! -d "$MAINDIR" ]; then
-  echo "Main directory does not exist: $MAINDIR"
+# Check if the mainDir exists and if not return error
+if [ ! -d "$mainDir" ]; then
+  echo "Main directory does not exist: $mainDir"
   exit 1
 fi
 
-# Check if the LOGDIR exists and if not return error
-if [ ! -d "$LOGDIR" ]; then
-  echo "Log directory does not exist: $LOGDIR"
+# Check if the logDir exists and if not return error
+if [ ! -d "$logDir" ]; then
+  echo "Log directory does not exist: $logDir"
   exit 1
 fi
 
 file_removal() {
-    # This function looks for any files older than 30 days in MAINDIR and removes them
-    cd $MAINDIR
-    FILES=$(find -type f -mtime +30)
-    if [ -n "$FILES" ]; then
-        echo -e "${GREEN}${NOW}: Successfully removed the following files: ${FILES}" >> "$LOGDIR/$LOGFILE"
-        rm $FILES
+    # This function looks for any files older than 30 days in mainDir and removes them
+    now=${date +"%Y-%m-%d %H:%M:%S"}
+
+    cd $mainDir
+    files=$(find -type f -mtime +30)
+    if [ -n "$files" ]; then
+        echo -e "${green}${now}: Successfully removed the following files: ${files}" >> "$logDir/$logFile"
+        rm $files
     else
-        echo -e "${RED}${NOW}: No files to be removed." >> "$LOGDIR/$LOGFILE"
+        echo -e "${red}${now}: No files to be removed." >> "$logDir/$logFile"
     fi
 }
 
 log_cleanup() {
-    # This function looks for any log files older than 30 days in LOGDIR and removes them
-    cd $LOGDIR
+    # This function looks for any log files older than 30 days in logDir and removes them
+    cd $logDir
     find -name "*_log.txt" -type f -mtime +30 -exec rm {} \;
 }
 
