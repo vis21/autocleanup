@@ -11,7 +11,7 @@ fi
 ```
 Replace the above with the below:
 ```
-if [! -d "$mainDir" ]; then
+if [ ! -d "$mainDir" ]; then
     mkdir -p "$mainDir"
 fi
 ```
